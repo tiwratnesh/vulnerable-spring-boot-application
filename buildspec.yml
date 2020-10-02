@@ -1,0 +1,35 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - aws cp s3://tools-devsecops/dependency-check.zip
+      - unzip dependency-check.zip
+      - chmod +x dependency-check/bin/dependency-check.sh
+
+      - aws cp s3://tools-devsecops/snyk.zip
+      - unzip snyk.zip
+      - chmod +x snyk && ./snyk config set api=4eb19633-c0f0-4043-a5c7-9404c40416a3 && ./snyk auth 4eb19633-c0f0-4043-a5c7-9404c40416a3
+
+  pre_build:
+    commands:
+      - echo "Perform sast here!"
+
+  build:
+    commands:
+      - mvn package -DskipTests
+
+  post_build:
+    commands:
+      - dependency-check/bin/dependency-check.sh --project vuln_app -s target/provider-search-0.0.1-SNAPSHOT.jar -f XML --disableNuspec --disableAssembly -d dependency-check/nvd --out /tmp
+      - rm -rf dependency-check*
+      - ./snyk test --json > /tmp/snyk-results.json
+      - rm -rf snyk
+
+
+artifacts:
+  files:
+    - /tmp/dependency-check-report.xml
+    - /tmp/snyk-results.json
+
+  discard-paths: yes
