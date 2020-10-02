@@ -23,15 +23,15 @@ phases:
 
   post_build:
     commands:
-      - dependency-check/bin/dependency-check.sh --project vuln_app -s target/provider-search-0.0.1-SNAPSHOT.jar -f XML --disableNuspec --disableAssembly -d dependency-check/nvd --out /tmp
+      - dependency-check/bin/dependency-check.sh --project vuln_app -s target/* -f XML --disableNuspec --disableAssembly -d dependency-check/nvd --out depcheck_report.xml
       - rm -rf dependency-check*
-      - ./snyk test --json > /tmp/snyk-results.json
+      - ./snyk test --json | tee snyk-results.json
       - rm -rf snyk
 
 
 artifacts:
   files:
-    - /tmp/dependency-check-report.xml
-    - /tmp/snyk-results.json
+    - depcheck_report.xml
+    - snyk-results.json
 
   discard-paths: yes
