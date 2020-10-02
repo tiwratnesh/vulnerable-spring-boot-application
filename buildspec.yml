@@ -5,5 +5,3 @@ phases:
     commands:
       - aws s3 cp s3://awscsp1337/snyk.zip .
       - unzip snyk.zip
-
-  discard-paths: yes
