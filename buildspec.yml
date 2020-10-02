@@ -4,6 +4,6 @@ phases:
 
   post_build:
     commands:
-      - sudo apt-get install docker-ce docker-ce-cli containerd.io
+      - apt-get install docker-ce docker-ce-cli containerd.io
       - docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v $PWD:/app shiftleft/scan scan --src /app --type java
       - rm -rf reports
