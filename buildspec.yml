@@ -28,7 +28,7 @@ phases:
       - snyk-to-html -i snyk-results.json -o snyk-results.html
       - rm -rf snyk
 
-      - docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v $PWD:/app shiftleft/scan scan --src /app --type java >/dev/null 2>&1 &
+      - docker run --rm -e "WORKSPACE=${PWD}" -v ~/.m2:/.m2 -v $PWD:/app shiftleft/scan scan --src /app --type java >/dev/null 2>&1
       - rm -rf reports
 
 artifacts:
